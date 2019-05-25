@@ -504,13 +504,13 @@
       }
 
     $(document).ready(function(){
-      $.urlParam('abcd');
-      autoLoadCSV($.urlParam('abcd'));
       $.fakeLoader({
         timeToHide:10000,
         bgColor:"#34495e",
         spinner:"spinner3"
       });
+      $.urlParam('abcd');
+      autoLoadCSV($.urlParam('abcd'));
       drawTheFigFtime();
       drawTheFigAge();
       drawTheFigGender();
