@@ -391,7 +391,7 @@
 
 
       function chartClickEvent(event, array){
-         if(typeof newArr === 'undefined'){newArr = array; }
+         newArr = array;
          if (event === 'undefined' || event == null) {return; }
          if (newArr === 'undefined' || newArr == null) {return; }
          if (newArr.length <= 0) {return; }
@@ -404,6 +404,19 @@
       }
 
       var showItemAll = []
+
+      var cfg = {
+        "radius": 0.002,
+        "maxOpacity": .8, 
+        "scaleRadius": true, 
+        "useLocalExtrema": true,
+        latField: 'lat',
+        lngField: 'lng',
+        valueField: 'count'
+      };
+      var heatmapLayer = new HeatmapOverlay(cfg);
+      heatmapLayer.addTo(map)
+
       function showDataInMap(thePointLogs, indexTime){
         thisPointLogs = thePointLogs[indexTime]
         showItemAll = []
@@ -412,24 +425,12 @@
           x = parseFloat(xyArr[0])
           y = parseFloat(xyArr[1])
           thisWeight = parseInt(thisPointLogs[itemP])
-          itemSeeeet = {lat: y , lng: x , count:thisWeight/maxVal}
+          itemSeeeet = {lat: y , lng: x , count:thisWeight}
           showItemAll.push(itemSeeeet)
         }
         var testData = {max : maxVal , data:showItemAll}
-        var cfg = {
-          "radius": 0.002,
-          "maxOpacity": .8, 
-          "scaleRadius": true, 
-          "useLocalExtrema": true,
-          latField: 'lat',
-          lngField: 'lng',
-          valueField: 'count'
-        };
-
-        var heatmapLayer = new HeatmapOverlay(cfg);
 
         heatmapLayer.setData(testData)
-        heatmapLayer.addTo(map)
       }
 
       var ftimeIndex = {}
@@ -438,8 +439,13 @@
       var minVal = 99999;
 
 
-      function autoLoadCSV(){
-        Papa.parse("./data/N_all_day.csv", {
+      function autoLoadCSV(actionFile){
+        if (actionFile=="W"){
+          filePath = "./data/W_all_day.csv"
+        }else{
+          filePath = "./data/N_all_day.csv"
+        }
+        Papa.parse(filePath, {
           download: true,
           header: true,
           dynamicTyping: true,
@@ -482,9 +488,6 @@
                   totalNum[a]+=ftimeIndex[a][b]
                 }
               }
-              console.log(totalNum);
-              console.log("max:" +maxVal);
-              console.log("min:" +minVal);
 
               window.theFigTotal.data.datasets[0].data=totalNum;
               window.theFigTotal.update()
@@ -497,13 +500,20 @@
       }
 
     $(document).ready(function(){
-      autoLoadCSV();
+      $.urlParam('abcd');
+      autoLoadCSV($.urlParam('abcd'));
       drawTheFigFtime();
       drawTheFigAge();
       drawTheFigGender();
       drawTheFigTotal();
       
     });
+
+    $.urlParam = function(name){
+      var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+      return results[1] || 0;
+    }
+
     </script>
   </body>
 </html>
