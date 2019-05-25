@@ -19,8 +19,6 @@
         height: 100%;
       }
 
-
-
       #events {
         position: absolute;
         z-index: 1000;
@@ -37,7 +35,6 @@
         font-family: sans-serif;
         box-sizing: border-box;
       }
-
       .event {
         background: rgba(0,0,0,0.2);
         font-family: monospace;
@@ -49,14 +46,19 @@
     </style>
   </head>
   <body>
+    
     <div id="map"></div>
     <div id="events"> 
       <center> 
+        <b id="selectedClock">【00:00】</b>
         <b> 選取範圍的統計 </b> <br/>
         <span class="description">在地圖上滑鼠拖曳選取範圍，按【ESC】取消</span>
+        <div class="chart-container">
+          <canvas id="canvas_FigTotal" height="150">各時間點當下的人潮</canvas>
+        </div>
         <hr/>
         <div class="chart-container row">
-          <canvas id="canvas_FigFtime" height="400">不同族群各時間點當下的人潮</canvas>
+          <canvas id="canvas_FigFtime" height="200">不同族群各時間點當下的人潮</canvas>
         </div>
         <hr/>
         <div class="row">
@@ -67,14 +69,12 @@
             <canvas id="canvas_FigGender" height="400"></canvas>
           </div>
         </div>
-        <div class="chart-container row">
-          <canvas id="canvas_figC" height="130">不同族群各時間點當下的人潮</canvas>
-        </div>
       </center>
     </div>
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <script src="./dist/leaflet-shades.js"></script>
-    <script src="./dist/leaflet-heat.js"></script>
+    <script src="./src/js/heatmap.js"></script>
+    <script src="./src/js/leaflet-heatmap.js"></script>
     <script src="./src/js/papaparse.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
@@ -82,13 +82,21 @@
     <script src="./src/js/utils.js"></script>
 
     <script>
+
       var map = L.map('map', {editable: true});
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
       map.setView([25.115387, 121.511559], 13);
       var r = map.editTools.startRectangle();
 
-      var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      // var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      //     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      // }).addTo(map);
+
+      var tiles =  L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abcd',
+        minZoom: 0,
+        maxZoom: 20,
+        ext: 'png'
       }).addTo(map);
 
 
@@ -124,6 +132,7 @@
             p_lng = parseFloat(x_y.split("_")[0])
             if (p_lat>=theSouthWest.lat && p_lat<=theNorthEast.lat && p_lng>=theSouthWest.lng && p_lng<=theNorthEast.lng ){
               points = x_yIndex[x_y]
+
               for ( p_index in points){
                 p= points[p_index]
                 if(p['ftime'] == indexFtime){
@@ -235,6 +244,59 @@
           window.theFigGender = new Chart(ctx_FigGender, configFigGender);
       }
 
+      function drawTheFigTotal(){
+          var timeFormat = 'HH:mm';
+          var color = Chart.helpers.color;
+          var dataFigTotal = {
+            labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            datasets: [{
+              type: 'bar',
+              label: '人次',
+              backgroundColor: window.chartColors.green,
+              data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+              yAxisID: 'y-axis-1'
+            }]
+          };
+
+          var configFigTotal = {
+            type: 'bar',
+            data: dataFigTotal,
+            options: {
+              responsive: true,
+              title: {
+                display: false,
+                text: '族群人次及平均停留時間',
+                fontSize: 10
+              },
+              tooltips: {
+                mode: 'index',
+                intersect: false
+              },
+              scales: {
+                yAxes: [{
+                  type: 'linear',
+                  display: true,
+                  position: 'left',
+                  id: 'y-axis-1',
+                  scaleLabel: {
+                    display: false,
+                  },
+                  ticks: {
+                            fontSize: 9
+                        }
+                }],
+              },
+              legend: {
+                  display:false
+              },
+              onClick: chartClickEvent
+            }
+          }
+          var ctx_FigTotal = document.getElementById('canvas_FigTotal').getContext('2d');
+          window.theFigTotal = new Chart(ctx_FigTotal, configFigTotal);
+          
+      }
+
       function drawTheFigFtime(){
           var timeFormat = 'HH:mm';
           var color = Chart.helpers.color;
@@ -319,42 +381,55 @@
           }
       });
 
+      function setTheSelectedClock(ftimeIndex,f_index){
+        console.log(f_index)
+        var labelsSet = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+        $("#selectedClock").html("【"+labelsSet[f_index]+"】")
+        showDataInMap(ftimeIndex,f_index)
+      }
 
+
+
+      function chartClickEvent(event, array){
+         if(typeof newArr === 'undefined'){newArr = array; }
+         if (event === 'undefined' || event == null) {return; }
+         if (newArr === 'undefined' || newArr == null) {return; }
+         if (newArr.length <= 0) {return; }
+         var chartData = newArr[0]['_chart'].config.data;
+         var idx = newArr[0]['_index'];
+         var label = chartData.labels[idx];
+         var value = chartData.datasets[0].data[idx];
+         var series = chartData.datasets[0].label;
+         setTheSelectedClock(ftimeIndex,idx)
+      }
+
+      var showItemAll = []
       function showDataInMap(thePointLogs, indexTime){
         thisPointLogs = thePointLogs[indexTime]
-        var showItemAll = []
+        showItemAll = []
         for( itemP in thisPointLogs ){
           xyArr = itemP.split("_")
-          x = xyArr[0]
-          y = xyArr[1]
-          thisWeight = thisPointLogs[itemP]
-          itemSeeeet = [y,x,thisWeight]
+          x = parseFloat(xyArr[0])
+          y = parseFloat(xyArr[1])
+          thisWeight = parseInt(thisPointLogs[itemP])
+          itemSeeeet = {lat: y , lng: x , count:thisWeight/maxVal}
           showItemAll.push(itemSeeeet)
         }
-        showItemAll.push([1,1,maxVal])
-        showItemAll.push([2,1,minVal])
-        var heat = L.heatLayer(showItemAll,{
-          minOpacity: 0.5,
-          radius: 13,
-          blur: 15, 
-          maxZoom: 15,
-          max: maxVal,
-          gradient: {
-            0.4: 'blue', 0.6: 'lime', 1: 'red'
-          }
-          // gradient: {
-          //   '0': '#00DD8C',
-          //   '0.05': '#00D949',
-          //   '0.12': '#00D507',
-          //   '0.21': '#37D200',
-          //   '0.32': '#74CE00',
-          //   '0.45': '#AECA00',
-          //   '0.60': '#C6A500',
-          //   '0.75': '#C26800',
-          //   '1': '#BF2D00'
-          // }
-        }).addTo(map);
-        // console.log(thePointLogs)
+        var testData = {max : maxVal , data:showItemAll}
+        var cfg = {
+          "radius": 0.002,
+          "maxOpacity": .8, 
+          "scaleRadius": true, 
+          "useLocalExtrema": true,
+          latField: 'lat',
+          lngField: 'lng',
+          valueField: 'count'
+        };
+
+        var heatmapLayer = new HeatmapOverlay(cfg);
+
+        heatmapLayer.setData(testData)
+        heatmapLayer.addTo(map)
       }
 
       var ftimeIndex = {}
@@ -398,18 +473,22 @@
                   x_yIndex[x_y] = [row]
                 }
               }
-              
+              var totalNum = []
               for(a in ftimeIndex){
+                totalNum[a]=0
                 for(b in ftimeIndex[a]){
                   maxVal=maxVal<ftimeIndex[a][b]?ftimeIndex[a][b]:maxVal
                   minVal=minVal>ftimeIndex[a][b]?ftimeIndex[a][b]:minVal
+                  totalNum[a]+=ftimeIndex[a][b]
                 }
               }
-
+              console.log(totalNum);
               console.log("max:" +maxVal);
               console.log("min:" +minVal);
 
-              showDataInMap(ftimeIndex, indexFtime );
+              window.theFigTotal.data.datasets[0].data=totalNum;
+              window.theFigTotal.update()
+              setTheSelectedClock(ftimeIndex, indexFtime );
               return;
             }
 
@@ -422,6 +501,7 @@
       drawTheFigFtime();
       drawTheFigAge();
       drawTheFigGender();
+      drawTheFigTotal();
       
     });
     </script>
