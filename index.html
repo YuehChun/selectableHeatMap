@@ -64,11 +64,11 @@
         </div>
         <hr/>
         <div class="row">
-          <div style="width:50%;" id="fig_age" class="col chart-container">
-            <canvas id="canvas_FigAge" height="400"></canvas>
+          <div style="width:50%; display:inline-block;" id="fig_age" class="chart-container">
+            <canvas id="canvas_FigAge" height="300"></canvas>
           </div>
-          <div style="width:50%;" id="fig_gender" class="col chart-container">
-            <canvas id="canvas_FigGender" height="400"></canvas>
+          <div style="width:48%; display:inline-block;" id="fig_gender" class="chart-container">
+            <canvas id="canvas_FigGender" height="300"></canvas>
           </div>
         </div>
       </center>
@@ -188,15 +188,16 @@
             options: {
               responsive: true,
               legend: {
-                position: 'bottom',
+                position: 'left',
                 labels: {
-                  fontSize: 9
+                  boxWidth:5,
+                  fontSize: 13
                 }
               },
               title: {
                 display: true,
                 text: '年齡層佔比',
-                fontSize: 10
+                fontSize: 8
               },
               animation: {
                 animateScale: true,
@@ -220,16 +221,17 @@
                   window.chartColors.blue,
                   window.chartColors.red
                 ],
-                label: '年齡層佔比'
+                label: '性別佔比'
               }],
               labels: ['男','女']
             },
             options: {
               responsive: true,
               legend: {
-                position: 'bottom',
+                position: 'left',
                 labels: {
-                  fontSize: 9
+                  boxWidth: 15,
+                  fontSize: 14
                 }
               },
               title: {
@@ -410,9 +412,9 @@
       var showItemAll = []
 
       var cfg = {
-        "radius": 0.002,
+        "radius": 20,
         "maxOpacity": .8, 
-        "scaleRadius": true, 
+        "scaleRadius": false, 
         "useLocalExtrema": true,
         latField: 'lat',
         lngField: 'lng',
@@ -508,9 +510,9 @@
         timeToHide:10000,
         bgColor:"#34495e",
         spinner:"spinner3"
-      });
-      $.urlParam('abcd');
-      autoLoadCSV($.urlParam('abcd'));
+      })
+      var loadp = $.urlParam('abcd')=='W'?'W':'N';
+      autoLoadCSV(loadp);
       drawTheFigFtime();
       drawTheFigAge();
       drawTheFigGender();
