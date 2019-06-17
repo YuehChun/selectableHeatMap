@@ -428,9 +428,9 @@
 
       function loadVillageData(actionFile){
         if (actionFile=="W"){
-          filePath = "./data/W_all_day.csv"
+          villageFiles = ['W_0_5.csv','W_6_11.csv','W_12_17.csv','W_18_23.csv']
         }else{
-          villageFiles = ['0-5.csv','12-17.csv','6-11.csv','18-23.csv']
+          villageFiles = ['N_0_5.csv','N_6_11.csv','N_12_17.csv','N_18_23.csv']
         }
         villageFiles.map((k)=>{
           Papa.parse('./data/'+k, {
