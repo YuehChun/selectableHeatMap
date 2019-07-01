@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
     <meta charset="utf-8">
@@ -110,6 +110,7 @@
 
     <script>
 
+
       var map = L.map('map', {editable: true});
       map.setView([25.115387, 121.511559], 13);
       var r = map.editTools.startRectangle();
@@ -183,17 +184,14 @@
       var maxVal = 1;
       var minVal = 99999;
 
+    function LoadingData(data){
 
-
-    $(document).ready(function(){
-      // loadVillageData(loadp);
-      // return 0
       $.fakeLoader({
         timeToHide:15000,
         bgColor:"#34495e",
         spinner:"spinner3"
       })
-      var loadp = $.urlParam('abcd')=='W'?'W':'N';
+      // var loadp = $.urlParam('abcd')=='W'?'W':'N';
       autoLoadCSV(loadp);
       drawTheFigFtime();
       drawTheFigAge();
@@ -201,16 +199,23 @@
       drawTheFigTotal();
       loadVillageData(loadp);
       console.log(x_yVillages)
+    }
+
+
+    $(document).ready(function(){
+      $.post( "https://hugo-m-line.herokuapp.com/extraWeb", { "token": "tpgogogo" }, function( data ){
+        console.log(data)
+      }, "json");
     });
 
-    $.urlParam = function(name){
-      var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-      if (results.length>0){
-        return results[1] || 0;
-      }else{
-        return "N";
-      }
-    }
+    // $.urlParam = function(name){
+    //   var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    //   if (results.length>0){
+    //     return results[1] || 0;
+    //   }else{
+    //     return "N";
+    //   }
+    // }
 
     </script>
   </body>
