@@ -107,7 +107,6 @@
     <script src="./src/js/Chart.min.js"></script>
     <script src="./src/js/utils.js"></script>
     <script src="./src/js/getThePoint.js"></script>
-
     <script>
 
 
@@ -184,28 +183,35 @@
       var maxVal = 1;
       var minVal = 99999;
 
-    function LoadingData(data){
+    function LoadingData(){
 
       $.fakeLoader({
         timeToHide:15000,
         bgColor:"#34495e",
         spinner:"spinner3"
       })
-      // var loadp = $.urlParam('abcd')=='W'?'W':'N';
-      autoLoadCSV(loadp);
+      autoLoadCSV();
       drawTheFigFtime();
       drawTheFigAge();
       drawTheFigGender();
       drawTheFigTotal();
-      loadVillageData(loadp);
+      loadVillageData();
       console.log(x_yVillages)
     }
-
+    function load_js(sgggg,nn){
+      var head= document.getElementsByTagName('head')[0];
+      var script= document.createElement('script');
+      script.src= 'http://localhost:5000/extraWeb?invit='+sgggg+'&f='+nn;
+      head.appendChild(script);
+      LoadingData()
+    }
+    // load_js();
 
     $(document).ready(function(){
-      $.post( "https://hugo-m-line.herokuapp.com/extraWeb", { "token": "tpgogogo" }, function( data ){
-        console.log(data)
-      }, "json");
+      load_js("tpgogogo","n")
+      // $.post("http://localhost:5000/extraWeb", { "token": "tpgogogo" }, function( data ){
+      //   console.log(data)
+      // }, "json");
     });
 
     // $.urlParam = function(name){

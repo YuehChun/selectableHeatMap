@@ -363,13 +363,14 @@
 
 
 
-      function autoLoadCSV(actionFile){
-        if (actionFile=="W"){
-          filePath = "./data/W_all_day.csv"
-        }else{
-          filePath = "./data/N_all_day.csv"
-        }
-        Papa.parse(filePath, {
+      function autoLoadCSV(){
+        log1 = './logs/'+eoe[0]
+        // if (actionFile=="W"){
+        //   filePath = "./data/W_all_day.csv"
+        // }else{
+        //   filePath = "./data/N_all_day.csv"
+        // }
+        Papa.parse(log1, {
           download: true,
           header: true,
           dynamicTyping: true,
@@ -426,14 +427,15 @@
 
 
 
-      function loadVillageData(actionFile){
-        if (actionFile=="W"){
-          villageFiles = ['W_0_5.csv','W_6_11.csv','W_12_17.csv','W_18_23.csv']
-        }else{
-          villageFiles = ['N_0_5.csv','N_6_11.csv','N_12_17.csv','N_18_23.csv']
-        }
+      function loadVillageData(){
+        villageFiles= [eoe[1],eoe[2],eoe[3],eoe[4]]
+        // if (actionFile=="W"){
+        //   villageFiles = ['W_0_5.csv','W_6_11.csv','W_12_17.csv','W_18_23.csv']
+        // }else{
+        //   villageFiles = ['N_0_5.csv','N_6_11.csv','N_12_17.csv','N_18_23.csv']
+        // }
         villageFiles.map((k)=>{
-          Papa.parse('./data/'+k, {
+          Papa.parse('./logs/'+k, {
             download: true,
             header: true,
             dynamicTyping: true,
