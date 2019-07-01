@@ -149,7 +149,6 @@
 
       var map = L.map('map', {editable: true});
       map.setView([25.115387, 121.511559], 13);
-      // ``
       var r = map.editTools.startRectangle();
 
       // var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -221,6 +220,7 @@
       var maxVal = 1;
       var minVal = 99999;
 
+
     $("#map_area").css("display","none");
 
     function startMap(){
@@ -242,7 +242,16 @@
         drawTheFigGender();
         drawTheFigTotal();
         loadVillageData();
-        map.setView([eoe[5], eoe[6], 13);
+
+        if (eoe[5]=='a'){
+          map.setView([25.115387 , 121.511559], 13);
+        } else if (eoe[5]=='b'){
+          map.setView([24.141047, 120.680979], 13);
+        } else if (eoe[5]=='c'){
+          map.setView([24.186128, 120.664678], 13);
+        }else{
+          location.reload();
+        }
       }else{
         location.reload();
       }
