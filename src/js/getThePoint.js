@@ -1,5 +1,5 @@
-
-      function QueryTheBoundsPoint(theNorthEast,theSouthWest){
+  
+      function QueryTheBoundsPoint(){
           var ftimeArr = {}
           var ftimeList = { '0': 0,'1': 0,'2': 0,'3': 0,'4': 0,'5': 0,'6': 0,'7': 0,'8': 0,'9': 0,
                             '10': 0,'11': 0,'12': 0,'13': 0,'14': 0,'15': 0,'16': 0,'17': 0,'18': 0,'19': 0,
@@ -324,9 +324,12 @@
 
 
       function setTheSelectedClock(ftimeIndex,f_index){
+        console.log(ftimeIndex,f_index)
         var labelsSet = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
         $("#selectedClock").html("【"+labelsSet[f_index]+"】")
         showDataInMap(ftimeIndex,f_index)
+        indexFtime=f_index
+        QueryTheBoundsPoint()
       }
 
 
@@ -429,11 +432,6 @@
 
       function loadVillageData(){
         villageFiles= [eoe[1],eoe[2],eoe[3],eoe[4]]
-        // if (actionFile=="W"){
-        //   villageFiles = ['W_0_5.csv','W_6_11.csv','W_12_17.csv','W_18_23.csv']
-        // }else{
-        //   villageFiles = ['N_0_5.csv','N_6_11.csv','N_12_17.csv','N_18_23.csv']
-        // }
         villageFiles.map((k)=>{
           Papa.parse('./logs/'+k, {
             download: true,

@@ -164,8 +164,8 @@
       }).addTo(map);
 
 
-      var theNorthEast = ""
-      var theSouthWest=""
+      var theNorthEast = {}
+      var theSouthWest = {}
 
 
       // var shades = new L.LeafletShades(); 
@@ -178,7 +178,7 @@
           theNorthEast=e.bounds._northEast
           theSouthWest=e.bounds._southWest
           var showItem = []
-          QueryTheBoundsPoint(theNorthEast,theSouthWest)
+          QueryTheBoundsPoint()
         }
       });
 
