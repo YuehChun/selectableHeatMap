@@ -368,11 +368,6 @@
 
       function autoLoadCSV(){
         log1 = './logs/'+eoe[0]
-        // if (actionFile=="W"){
-        //   filePath = "./data/W_all_day.csv"
-        // }else{
-        //   filePath = "./data/N_all_day.csv"
-        // }
         Papa.parse(log1, {
           download: true,
           header: true,
