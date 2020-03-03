@@ -101,15 +101,6 @@
           tableBodyStr+="<tr> <th scope=\"row\"> #"+(showItemNumber+1)+"</th><td>其他</td><td id='villageTD'>"+otherNum+"</td><td id='villageTD'>"+strPercent+"</td></tr>"
         }
         $("#villageTable").html(tableBodyStr)
-        // var otherNum = 0
-        // items.map( (i, v)=>{
-        //   if(i<10){
-        //     otherNum+=v[1]
-        //   }else{
-        //     console.log(v)
-        //   }
-        // });
-        // console.log(otherNum)
       }
 
 
@@ -367,7 +358,7 @@
 
 
       function autoLoadCSV(){
-        log1 = './logs/'+eoe[0]
+        log1 = './logs/tp2_N_all_day'
         Papa.parse(log1, {
           download: true,
           header: true,
@@ -426,7 +417,7 @@
 
 
       function loadVillageData(){
-        villageFiles= [eoe[1],eoe[2],eoe[3],eoe[4]]
+        villageFiles= ['tp2_N_0_7','tp2_N_8_12','tp2_N_13_17','tp2_N_18_23']
         villageFiles.map((k)=>{
           Papa.parse('./logs/'+k, {
             download: true,
@@ -437,7 +428,6 @@
               if(results.meta.fields.indexOf("ccnt") == -1) {
                 for(idx in results.data) {
                   var row = results.data[idx];
-                  // csv.push(new google.maps.LatLng(row["lat"], row["lon"]))
                 }
               } else {
                 for(idx in results.data) {
